@@ -24,7 +24,7 @@ on:
         description: "Build on x86_64-darwin"
         required: true
         type: choice
-        default: yes_sandbox_true
+        default: yes_sandbox_relaxed
         options:
           - "no"
           - yes_sandbox_false
@@ -34,7 +34,7 @@ on:
         description: "Build on aarch64-darwin"
         required: true
         type: choice
-        default: yes_sandbox_true
+        default: yes_sandbox_relaxed
         options:
           - "no"
           - yes_sandbox_false
@@ -75,6 +75,7 @@ jobs:
       - name: setup nix
         uses: ./.github/actions/setup-nix
         with:
+          extra-nix-config: ${{ vars.EXTRA_NIX_CONFIG }}
           system: ${{ matrix.system }}
           sandbox: ${{
             (matrix.system == 'x86_64-darwin' && inputs.x86_64-darwin == 'yes_sandbox_false'
@@ -86,6 +87,12 @@ jobs:
       - name: nix build
         run: nix build --keep-going -L ${{ inputs.packages }}
         if: ${{ inputs.packages != '' }}
+
+      - name: set GITHUB_TOKEN
+        if: ${{ inputs.upterm }}
+        run: echo "GITHUB_TOKEN=${GITHUB_TOKEN}" >> "$GITHUB_ENV"
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: start upterm session
         if: ${{ inputs.upterm }}

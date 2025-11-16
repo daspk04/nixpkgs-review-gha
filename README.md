@@ -43,6 +43,15 @@ Follow these steps if you want nixpkgs-review-gha to push new packages to a [Cac
 2. [Create a new variable](../../settings/variables/actions/new) with the name `CACHIX_CACHE` and set it to the name of your Cachix cache.
 3. [Create a new secret](../../settings/secrets/actions/new) with the name `CACHIX_AUTH_TOKEN` and set its value to your auth token. If you are using a self-signed cache, you also need to create a `CACHIX_SIGNING_KEY` secret and set its value to your private signing key.
 
+### Extra Nix Config (optional)
+If you have additional configuration you want to append to `/etc/nix/nix.conf`, you can [create a new variable](../../settings/variables/actions/new) with the name `EXTRA_NIX_CONFIG`.
+For example, if you want to configure nix to use additional substituters, set its value to the following:
+
+```
+extra-substituters = https://nix-community.cachix.org
+extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs=
+```
+
 ### Shortcuts on nixpkgs PR pages (optional)
 Add [`shortcut.js`](shortcut.js) as a user script in your browser for `https://github.com/` for example using the [User JavaScript and CSS chrome extension](https://chromewebstore.google.com/detail/user-javascript-and-css/nbhcbdghjpllgmfilhnhkllmkecfmpld) or [Violentmonkey](https://violentmonkey.github.io/). Don't forget to update the `repo` constant at the top of the file to point to your fork.
 

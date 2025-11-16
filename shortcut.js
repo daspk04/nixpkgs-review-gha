@@ -7,7 +7,7 @@
 const repo = "Defelo/nixpkgs-review-gha";
 
 const reviewDefaults = ({ title, commits, labels, author, authoredByMe, hasLinuxRebuilds, hasDarwinRebuilds }) => {
-  const darwinSandbox = "true";
+  const darwinSandbox = "relaxed";
 
   const hasRebuilds = hasLinuxRebuilds || hasDarwinRebuilds;
 
