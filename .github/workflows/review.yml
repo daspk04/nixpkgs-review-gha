@@ -83,6 +83,10 @@ jobs:
       author_id: ${{ steps.pr.outputs.author_id }}
 
     steps:
+      - name: display inputs
+        run: echo "$INPUTS"
+        env:
+          INPUTS: "${{ toJSON(github.event.inputs) }}"
       - name: get pr
         id: pr
         run: |
@@ -256,7 +260,7 @@ jobs:
         env:
           OS: ${{ runner.os }}
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: report_${{ matrix.system }}.json
           path: report_${{ matrix.system }}.json
@@ -269,7 +273,7 @@ jobs:
       success: ${{ steps.report.outputs.success }}
 
     steps:
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           merge-multiple: true
 
@@ -316,7 +320,7 @@ jobs:
           MERGE: ${{ needs.prepare.outputs.merge }}
           EXTRA_ARGS: ${{ inputs.extra-args }}
 
-      - uses: actions/upload-artifact@v5
+      - uses: actions/upload-artifact@v6
         with:
           name: report.md
           path: report.md
@@ -328,7 +332,7 @@ jobs:
     if: ${{ inputs.post-result || inputs.on-success != 'nothing' }}
 
     steps:
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           name: report.md
 
