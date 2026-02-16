@@ -14,7 +14,7 @@ Run [nixpkgs-review](https://github.com/Mic92/nixpkgs-review) in GitHub Actions
 ## Setup
 1. [Fork](https://github.com/Defelo/nixpkgs-review-gha/fork) this repository.
 2. In your fork, go to the [Actions](../../actions) tab and enable GitHub Actions workflows.
-3. If you don't want to set up [automatic self-updates](#automatic-self-updates-optional), please disable the `self-update` workflow ([Actions / `self-update`](../../actions/workflows/self-update.yml) > `...` button (top right corner) > `Disable workflow`).
+3. If you want to set up [automatic self-updates](#automatic-self-updates-optional), please enable the `self-update` workflow ([Actions / `self-update`](../../actions/workflows/self-update.yml) > `...` button (top right corner) > `Enable workflow`).
 
 ### Post Results / Auto Approve/Merge (optional)
 If you want nixpkgs-review-gha to automatically post the results on the reviewed pull requests or automatically mark them as ready for review or approve/merge them, you need to generate a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens):
@@ -53,7 +53,10 @@ extra-trusted-public-keys = nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq
 ```
 
 ### Shortcuts on nixpkgs PR pages (optional)
-Add [`shortcut.js`](shortcut.js) as a user script in your browser for `https://github.com/` for example using the [User JavaScript and CSS chrome extension](https://chromewebstore.google.com/detail/user-javascript-and-css/nbhcbdghjpllgmfilhnhkllmkecfmpld) or [Violentmonkey](https://violentmonkey.github.io/). Don't forget to update the `repo` constant at the top of the file to point to your fork.
+Add [`shortcut.user.js`](shortcut.user.js) as a user script in your browser for `https://github.com/` for example using the [User JavaScript and CSS chrome extension](https://chromewebstore.google.com/detail/user-javascript-and-css/nbhcbdghjpllgmfilhnhkllmkecfmpld) or [Violentmonkey](https://violentmonkey.github.io/). Don't forget to update the `repo` constant at the top of the file to point to your fork.
+
+> [!TIP]
+> Opening the [raw file](shortcut.user.js?raw=true) with Violetmonkey installed will prompt for installation.
 
 ## Usage
 1. Open the [review workflow in the "Actions" tab](../../actions/workflows/review.yml)
