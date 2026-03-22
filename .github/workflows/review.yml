@@ -260,11 +260,12 @@ jobs:
         env:
           OS: ${{ runner.os }}
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: report_${{ matrix.system }}.json
           path: report_${{ matrix.system }}.json
           if-no-files-found: error
+          archive: false
 
   report:
     runs-on: ubuntu-latest
@@ -273,7 +274,7 @@ jobs:
       success: ${{ steps.report.outputs.success }}
 
     steps:
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           merge-multiple: true
 
@@ -320,11 +321,12 @@ jobs:
           MERGE: ${{ needs.prepare.outputs.merge }}
           EXTRA_ARGS: ${{ inputs.extra-args }}
 
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         with:
           name: report.md
           path: report.md
           if-no-files-found: error
+          archive: false
 
   post-result:
     runs-on: ubuntu-latest
@@ -332,7 +334,7 @@ jobs:
     if: ${{ inputs.post-result || inputs.on-success != 'nothing' }}
 
     steps:
-      - uses: actions/download-artifact@v7
+      - uses: actions/download-artifact@v8
         with:
           name: report.md
 
