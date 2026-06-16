@@ -19,10 +19,18 @@ Run [nixpkgs-review](https://github.com/Mic92/nixpkgs-review) in GitHub Actions
 3. If you want to set up [automatic self-updates](#automatic-self-updates-optional), please enable the `self-update` workflow ([Actions / `self-update`](../../actions/workflows/self-update.yml) > `...` button (top right corner) > `Enable workflow`).
 
 ### Post Results / Auto Approve/Merge (optional)
-If you want nixpkgs-review-gha to automatically post the results on the reviewed pull requests or automatically mark them as ready for review or approve/merge them, you need to generate a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens):
+nixpkgs-review-gha can automatically post the results as a comment on the reviewed pull requests and approve the PR after a successful review out of the box by using an [nrgha-api server](api).
+The default instance will use the [@nixpkgs-review-gha](https://github.com/nixpkgs-review-gha) account to create its report comments.
+If you want to host and use your own nrgha-api instance, you can [create a new variable](../../settings/variables/actions/new) with the name `API_URL` and set its value to your base URL (without a trailing slash).
+
+If you don't want to use the API server, or if you also want to be able to automatically mark PRs as ready for review or merge them on review success, you need to generate a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens):
 
 1. Go to <https://github.com/settings/tokens> and generate a new **classic** token with the `public_repo` scope.
 2. In your fork, go to "Settings" > "Secrets and variables" > "Actions" and [add a new repository secret](../../settings/secrets/actions/new) with the name `GH_TOKEN` and set its value to the personal access token you generated before.
+
+> [!WARNING]
+> Tokens with the `public_repo` scope have almost full access to *all* public repositories, so they should only be used with great caution.
+> Unfortunately it is neither possible to create a classic PAT with a smaller scope nor is it possible to use fine-grained tokens (which aren't *that* fine-grained anyway) here, so it is recommended to not add a `GH_TOKEN` and simply use the nrgha-api server which doesn't require any configuration on your end.
 
 ### Automatic Self-Updates (optional)
 If you want your fork to update itself on a regular basis, you need to generate a [personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens). Note that this token is different from the one used above!
@@ -103,3 +111,19 @@ The userscript assumes that you forked this repository to your personal account 
 2. Click on "Run workflow"
 3. Enter the number of the pull request in nixpkgs you would like to review and click on "Run workflow"
 4. Reload the page if necessary and click on the review run to see the logs
+
+## Experimental Features
+
+### Identify still failing packages
+If a package fails to build, try to build the same package again, but on the base branch (e.g. `master` or `release-XX.YY`).
+If the package also fails to build on the base branch, it will be marked as "still failing" in the report to make it easier to see which build failures are unlikely to be caused by the PR being reviewed.
+Note that these build failures still count towards whether the review is considered successful or not, so if you told nixpkgs-review-gha to automatically approve or merge the PR after a successful review and a package is "still failing" to build (even if all other packages have been built successfully), the PR is *not* approved/merged and you should inspect the build failure manually.
+
+To enable this feature [create a new variable](../../settings/variables/actions/new) with the name `IDENTIFY_STILL_FAILING_PACKAGES` and set its value to `1`.
+
+### Identify unsupported packages
+If a package fails to build, try to detect whether the build failure was caused by a missing system feature.
+For example, most hosted GitHub Actions runners cannot build QEMU/KVM based NixOS tests because they lack the `kvm` feature.
+Trying to build a NixOS test on such a runner will always fail, so with this experimental feature enabled, packages that fail to build due to a missing system feature will be marked as "unsupported" and will NOT count towards review success/failure, i.e. if some packages are unsupported and all other packages have been built successfully, the PR *is* approved/merged automatically if you told nixpkgs-review-gha to do that.
+
+To enable this feature [create a new variable](../../settings/variables/actions/new) with the name `IDENTIFY_UNSUPPORTED_PACKAGES` and set its value to `1`.

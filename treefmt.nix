@@ -7,6 +7,10 @@
   excludes = [
     "*.lock"
     "*.md"
+    "*.nu"
+    "*.patch"
+    "*.snap"
+    "*/.gitignore"
     ".gitignore"
     "LICENSE"
   ];
@@ -27,6 +31,25 @@
       "--write"
       "--print-width=120"
       "--arrow-parens=avoid"
+    ];
+  };
+
+  formatter.rustfmt = {
+    command = lib.getExe pkgs.rustfmt;
+    includes = [ "*.rs" ];
+    options = [
+      "--config=skip_children=true"
+      "--edition=2024"
+    ];
+  };
+
+  formatter.taplo = {
+    command = lib.getExe pkgs.taplo;
+    includes = [ "*.toml" ];
+    options = [
+      "format"
+      "--option=column_width=120"
+      "--option=align_comments=false"
     ];
   };
 }
