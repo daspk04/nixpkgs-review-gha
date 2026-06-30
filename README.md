@@ -88,14 +88,13 @@ Set the following [secrets](../../settings/secrets/actions):
 Set the following [variables](../../settings/variables/actions):
 
 - `BUILDERS`: A newline separated list of build machines in the same format as the [`builders` option in `nix.conf`](https://nix.dev/manual/nix/latest/command-ref/conf-file#conf-builders). You will need to set the value of the third field (ssh identity) to `/etc/nix/ssh_id` which is where your `SSH_KEY` is placed. Your `SSH_CERT` should be picked up automatically, if you have configured one.
-- `USE_BUILDERS`: Either `no`, `yes`, or `always`. If set to `yes`, remote builders are used *in addition to* the GitHub Actions runner. If set to `always`, *only* remote builders are used and no builds happen on the runner. If set to `no`, remote builders are not used at all.
 
 For example, you can set `BUILDERS` to the following if you want to build on the [nix-community builders](https://nix-community.org/community-builders/). Keep in mind that these builders should generally [not be trusted](https://nix-community.org/community-builders/#notes-on-security-and-safety), so be careful with what you might push into the [binary caches](#push-to-attic-cache-optional) you configured above.
 
 ```
 ssh-ng://YOUR_USERNAME@build-box.nix-community.org x86_64-linux /etc/nix/ssh_id 6 - benchmark,big-parallel,kvm,nixos-test,uid-range - c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUVsSVE1NHFBeTdEaDYzckJ1ZFlLZGJ6SkhycmJyck1YTFlsN1BrbWs4OEg=
 ssh-ng://YOUR_USERNAME@aarch64-build-box.nix-community.org aarch64-linux /etc/nix/ssh_id 20 - benchmark,big-parallel,gccarch-armv7-a,gccarch-armv8-a,kvm,nixos-test,uid-range - c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUc5dXlmaHlsaStCUnRrNjR5K25pcXRiK3NLcXVSR0daODdmNFlSYzhFRTE=
-ssh-ng://YOUR_USERNAME@darwin-build-box.nix-community.org x86_64-darwin,aarch64-darwin /etc/nix/ssh_id 2 - big-parallel - c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUtNSGhsY243ZlVwVXVpT0ZlSWhEcUJ6Qk5Gc2JOcXErTnB6dUdYM2U2enY=
+ssh-ng://YOUR_USERNAME@darwin-build-box.nix-community.org aarch64-darwin /etc/nix/ssh_id 2 - big-parallel - c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUtNSGhsY243ZlVwVXVpT0ZlSWhEcUJ6Qk5Gc2JOcXErTnB6dUdYM2U2enY=
 ```
 
 ### Shortcuts on nixpkgs PR pages (optional)
