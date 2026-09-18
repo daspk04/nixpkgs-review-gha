@@ -86,6 +86,7 @@ struct SubmitReportResponse {
     errors: Vec<&'static str>,
 }
 
+#[expect(clippy::result_large_err)]
 async fn submit_report(
     state: axum::extract::State<Arc<State>>,
     auth: TypedHeader<Authorization<Bearer>>,

@@ -10,24 +10,7 @@
     let
       inherit (nixpkgs) lib;
 
-      importNixpkgs =
-        system:
-        import nixpkgs {
-          inherit system;
-          overlays = [
-            (final: prev: {
-              nixpkgs-review = prev.nixpkgs-review.overrideAttrs (attrs: {
-                patches = attrs.patches or [ ] ++ [
-                  (final.fetchpatch2 {
-                    # https://github.com/Mic92/nixpkgs-review/pull/654
-                    url = "https://github.com/Mic92/nixpkgs-review/commit/5aa30517cea5b4f80056ab5a175467e3acf33930.patch";
-                    hash = "sha256-LweGea6LPc3TfxD4ceRRGAE8B8EOTDly1usRQWok3Bo=";
-                  })
-                ];
-              });
-            })
-          ];
-        };
+      importNixpkgs = system: nixpkgs.legacyPackages.${system};
 
       eachSystem = f: lib.genAttrs systems (system: f (importNixpkgs system));
       systems = [
