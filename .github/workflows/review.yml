@@ -56,6 +56,16 @@ on:
         required: true
         type: boolean
         default: false
+      allow-unfree:
+        description: "Allow unfree packages"
+        required: true
+        type: boolean
+        default: true
+      allow-insecure:
+        description: "Allow insecure packages"
+        required: true
+        type: boolean
+        default: true
       builders:
         description: "Nix builders to use"
         required: true
@@ -106,15 +116,15 @@ jobs:
       pr: ${{ steps.prepare.outputs.pr }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
-            /.github/actions
             /review
 
       - name: setup nu
-        uses: ./.github/actions/setup-nu
+        uses: $/.github/actions/setup-nu
 
       - run: nu review/prepare.nu
         id: prepare
@@ -148,11 +158,11 @@ jobs:
       || (matrix.system == 'riscv64-linux' && 'ubuntu-24.04-riscv') }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
-            /.github/actions
             /review
             /flake.lock
             /flake.nix
@@ -160,10 +170,10 @@ jobs:
             /drv-build-support.nix
 
       - name: setup nu
-        uses: ./.github/actions/setup-nu
+        uses: $/.github/actions/setup-nu
 
       - name: setup nix
-        uses: ./.github/actions/setup-nix
+        uses: $/.github/actions/setup-nix
         with:
           extra-nix-config: ${{ vars.EXTRA_NIX_CONFIG }}
           system: ${{ matrix.system }}
@@ -178,7 +188,7 @@ jobs:
           ssh-cert: ${{ inputs.builders != 'gha' && secrets.SSH_CERT || '' }}
 
       - name: clone nixpkgs
-        uses: actions/checkout@v6
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: NixOS/nixpkgs
           path: nixpkgs
@@ -198,7 +208,7 @@ jobs:
           IDENTIFY_STILL_FAILING_PACKAGES: ${{ vars.IDENTIFY_STILL_FAILING_PACKAGES }}
           IDENTIFY_UNSUPPORTED_PACKAGES: ${{ vars.IDENTIFY_UNSUPPORTED_PACKAGES }}
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: report_${{ matrix.system }}.json
           path: report_${{ matrix.system }}.json
@@ -207,7 +217,7 @@ jobs:
 
       - name: start upterm session
         if: ${{ inputs.upterm }}
-        uses: owenthereal/action-upterm@v1
+        uses: owenthereal/action-upterm@b9dfa526f890bbd5162d781f8d9c69b97731d73d # v2.7.0
         with:
           limit-access-to-actor: true
 
@@ -218,17 +228,17 @@ jobs:
       id-token: write
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
+          persist-credentials: false
           sparse-checkout-cone-mode: false
           sparse-checkout: |
-            /.github/actions
             /review
 
       - name: setup nu
-        uses: ./.github/actions/setup-nu
+        uses: $/.github/actions/setup-nu
 
-      - uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           merge-multiple: true
 
@@ -243,14 +253,14 @@ jobs:
           SHA: ${{ github.workflow_sha }}
           API_URL: ${{ vars.API_URL }}
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: reports.json
           path: reports.json
           if-no-files-found: error
           archive: false
 
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: report.md
           path: report.md
